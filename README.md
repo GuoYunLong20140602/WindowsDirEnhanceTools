@@ -1,6 +1,6 @@
 # WindowsDirEnhanceTools
 ## 🌟 简介
-WindowsDirEnhanceTools 是一款增强版的目录列表工具，旨在改进Windows系统中dir命令的输出，通过添加色彩编码、详细文件信息以及更友好的输出格式，让文件和目录的浏览变得更加直观和高效。
+`WindowsDirEnhanceTools` 是一款增强版的目录列表工具，旨在改进Windows系统中dir命令的输出，通过添加色彩编码、详细文件信息以及更友好的输出格式，让文件和目录的浏览变得更加直观和高效。
 源码在./ls.py。
 ls.exe使用`Nuitka`进行编译。
 
@@ -13,7 +13,7 @@ git clone https://github.com/yourusername/WindowsDirEnhanceTools.git
 `cd WindowsDirEnhanceTools`
 设置环境变量:
 
-##💻 使用方法
+## 💻 使用方法
 运行脚本，可以不带参数列出当前目录的信息，或指定路径查看该路径下的文件和目录：
 
 ls
@@ -21,7 +21,7 @@ ls
 ## 📊 示例输出
 当运行脚本时，你将看到如下彩色输出：
 
-<span style="color:cyan;">公共</span><span style="color:green;">(目录)</span>
+公共(目录)
 desktop.ini (174字节) (文件) (修改时间:2009-07-14 12:54)(.ini)
 目录：以青色突出显示。
 文件：以洋红色显示，附带文件大小、修改时间和扩展名。
