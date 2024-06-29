@@ -1,11 +1,11 @@
-#WindowsDirEnhanceTools
-##🌟 简介
+# WindowsDirEnhanceTools
+## 🌟 简介
 WindowsDirEnhanceTools 是一款增强版的目录列表工具，旨在改进Windows系统中dir命令的输出，通过添加色彩编码、详细文件信息以及更友好的输出格式，让文件和目录的浏览变得更加直观和高效。
 源码在./ls.py。
 ls.exe使用Nuitka进行编译。
 
 
-##📦 安装
+## 📦 安装
 
 克隆此仓库到本地：
 git clone https://github.com/yourusername/WindowsDirEnhanceTools.git
@@ -18,7 +18,7 @@ cd WindowsDirEnhanceTools
 
 ls
 
-##📊 示例输出
+## 📊 示例输出
 当运行脚本时，你将看到如下彩色输出：
 
 Public(目录)
