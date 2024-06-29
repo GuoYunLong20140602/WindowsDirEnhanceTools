@@ -8,7 +8,7 @@ ls.exe使用`Nuitka`进行编译。
 ## 📦 安装
 
 克隆此仓库到本地：
-git clone https://github.com/yourusername/WindowsDirEnhanceTools.git
+<code>git clone https://github.com/yourusername/WindowsDirEnhanceTools.git</code>
 进入项目目录：
 `cd WindowsDirEnhanceTools`
 设置环境变量:
