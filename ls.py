@@ -4,17 +4,27 @@ import argparse
 from rich import print
 
 
+def format_size(size):
+    """格式化文件大小，转换为更友好的单位"""
+    units = ['B', 'KB', 'MB', 'GB', 'TB']
+    unit_index = 0
+    while size >= 1024 and unit_index < len(units)-1:
+        size /= 1024
+        unit_index += 1
+    return f"{round(size, 2)} {units[unit_index]}"
+
+
 def get_file_info(file_path, show_modified, show_viewed):
     """获取文件信息，减少系统调用次数"""
     stat_result = os.stat(file_path)
-    file_size = stat_result.st_size
+    file_size = format_size(stat_result.st_size)
     ext = os.path.splitext(file_path)[1]
 
     # 只有当需要时才计算时间戳
     last_modified_time = time.strftime(
-        "%Y-%m-%d %H:%M", time.localtime(stat_result.st_mtime)) if show_modified else ""
+        "%Y-%m-%d %H:%M", time.localtime(stat_result.st_mtime)) if show_modified else None
     last_view_time = time.strftime(
-        "%Y-%m-%d %H:%M:%S", time.localtime(stat_result.st_atime)) if show_viewed else ""
+        "%Y-%m-%d %H:%M:%S", time.localtime(stat_result.st_atime)) if show_viewed else None
 
     return file_size, last_modified_time, last_view_time, ext
 
@@ -24,12 +34,15 @@ parser = argparse.ArgumentParser(description="列出指定目录下的所有文�
 parser.add_argument("directory", nargs='?', default='.', help="要列出的目录")
 parser.add_argument("-m", "--modified", action="store_true", help="显示最后修改时间")
 parser.add_argument("-v", "--viewed", action="store_true", help="显示最后访问时间")
-parser.add_argument("--version", action="version", version='%(prog)s 3.0.1')
+parser.add_argument("--version", action="version", version='%(prog)s 3.1.3')
 
 args = parser.parse_args()
 
 # 直接使用给定的目录，避免不必要的chdir调用
 directory = args.directory
+
+
+files = []
 
 # 使用os.scandir()代替os.listdir()和os.stat()，它更高效
 with os.scandir(directory) as it:
@@ -37,6 +50,11 @@ with os.scandir(directory) as it:
         if entry.is_dir():
             print(f"[cyan]{entry.name}[/cyan][green](目录)[/green]")
         else:
-            file_size, last_modified_time, last_view_time, ext = get_file_info(
-                entry.path, args.modified, args.viewed)
-            print(f"""[magenta]{entry.name}[/magenta] [yellow]({file_size}字节)[/yellow] [green](文件)[/green] [black]({last_modified_time}{'最后修改时间:' if last_modified_time else ''}{'最后查看时间'+last_view_time+' ' if last_view_time else ''}{ext if ext else "无后缀"})[/black]""")
+            files.append(entry)
+
+
+# 输出文件
+for file_entry in files:
+    file_size, last_modified_time, last_view_time, ext = get_file_info(
+        file_entry.path, args.modified, args.viewed)
+    print(f"""[magenta]{file_entry.name}[/magenta] [yellow]({file_size})[/yellow] [green](文件)[/green] [black]{"(" if last_modified_time or last_view_time or ext else ""}{last_modified_time if last_modified_time else ''}{'最后修改时间:' if last_modified_time else ''}{'最后查看时间'+last_view_time+' ' if last_view_time else ''}{ext if ext else ""}{")" if ext or last_modified_time or last_view_time else ""}[/black]""")
