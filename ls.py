@@ -1,30 +1,46 @@
-import sys
 import os
 import time
+import argparse
 from rich import print
-if len(sys.argv) == 1:
-    # 获取当前目录下的文件名和信息
-    files = os.listdir(os.getcwd())
-else:
-    # 获取指定目录下的文件名和信息（如果存在）
-    files = os.listdir(sys.argv[1])
 
-a = []
-b = []
-for file in files:
-    if os.path.isdir(file):
-        a.append(file)
-    elif os.path.isfile(file):  # 如果是文件，则打印文件名,大小信息,最后修改时间,后缀名信息
-        # 打印文件名和大小信息（可选）
-        b.append(file)
-files = sorted(a) + sorted(b)
-for file in files:
-    if os.path.isdir(file):
-        print(f"[cyan]{file}[/cyan][green](目录)[/green]")
-    elif os.path.isfile(file):
-        last_modified_time = time.strftime("%Y-%m-%d %H:%M",
-                                           time.localtime(os.path.getmtime(file)))
-        last_view_time = time.strftime(
-            "%Y-%m-%d %H:%M:%S", time.localtime(os.path.getatime(file)))
-        print(
-            f"[magenta]{file}[/magenta] [yellow]({os.path.getsize(file)}字节)[/yellow] [green](文件)[/green] [black](修改时间:{last_modified_time})({os.path.splitext(file)[1]})[/black]")  # 打印文件名,大小信息,最后修改时间,后缀名信息
+
+def get_file_info(file_path, show_modified, show_viewed):
+    """获取文件信息，减少系统调用次数"""
+    stat_result = os.stat(file_path)
+    file_size = stat_result.st_size
+    ext = os.path.splitext(file_path)[1]
+
+    # 只有当需要时才计算时间戳
+    last_modified_time = time.strftime(
+        "%Y-%m-%d %H:%M", time.localtime(stat_result.st_mtime)) if show_modified else ""
+    last_view_time = time.strftime(
+        "%Y-%m-%d %H:%M:%S", time.localtime(stat_result.st_atime)) if show_viewed else ""
+
+    return file_size, last_modified_time, last_view_time, ext
+
+
+# 添加命令行参数支持，可以指定目录，默认为当前目录
+parser = argparse.ArgumentParser(description="列出指定目录下的所有文件和文件夹")
+parser.add_argument("directory", nargs='?', default='.', help="要列出的目录")
+parser.add_argument("-m", "--modified", action="store_true", help="显示最后修改时间")
+parser.add_argument("-v", "--viewed", action="store_true", help="显示最后访问时间")
+parser.add_argument("--version", action="version", version='%(prog)s 3.0.0')
+
+args = parser.parse_args()
+
+try:
+    if args.version:
+        exit(0)
+except:
+    # 直接使用给定的目录，避免不必要的chdir调用
+    directory = args.directory
+
+    # 使用os.scandir()代替os.listdir()和os.stat()，它更高效
+    with os.scandir(directory) as it:
+        for entry in it:
+            if entry.is_dir():
+                print(f"[cyan]{entry.name}[/cyan][green](目录)[/green]")
+            else:
+                file_size, last_modified_time, last_view_time, ext = get_file_info(
+                    entry.path, args.modified, args.viewed)
+                print(f"""[magenta]{entry.name}[/magenta] [yellow]({file_size}字节)[/yellow] [green](文件)[/green] [black]({last_modified_time}{'最后修改时间:' if last_modified_time else ''}{'最后查看时间'+last_view_time+' ' if last_view_time else ''}{ext if ext else "无后缀"})[/black]""")
