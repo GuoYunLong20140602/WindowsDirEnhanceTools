@@ -1,7 +1,7 @@
 AS=as
 CC="C:\Users\Administrator\AppData\Local\Nuitka\Nuitka\Cache\downloads\gcc\x86_64\13.2.0-16.0.6-11.0.1-msvcrt-r1\mingw64\bin\ccache.exe" "C:\Users\Administrator\AppData\Local\Nuitka\Nuitka\Cache\downloads\gcc\x86_64\13.2.0-16.0.6-11.0.1-msvcrt-r1\mingw64\bin\gcc.exe"
 CCACHE_DIR=C:\Users\Administrator\AppData\Local\Nuitka\Nuitka\Cache\ccache
-CCACHE_LOGFILE=C:\Users\Administrator\Desktop\exe打包\自制dir\ls.build\ccache-11788.txt
+CCACHE_LOGFILE=C:\Users\Administrator\Desktop\exe打包\自制dir\ls.build\ccache-7248.txt
 CCCOM=$CC -o $TARGET -c $CFLAGS $CCFLAGS $_CCCOMCOM $SOURCES
 CFILESUFFIX=.c
 CPPDEFINES=['_WIN32_WINNT=0x0501', '__NUITKA_NO_ASSERT__', 'MS_WIN64', '_NUITKA_CONSTANTS_FROM_RESOURCE', '_NUITKA_FROZEN=0', '_NUITKA_EXE', '_NUITKA_FILE_REFERENCE_ORIGINAL_MODE']
